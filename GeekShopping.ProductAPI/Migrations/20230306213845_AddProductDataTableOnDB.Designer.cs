@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeekShopping.ProductAPI.Migrations
 {
     [DbContext(typeof(MySqlContext))]
-    [Migration("20220826004117_AddProductDataTableOnDB")]
+    [Migration("20230306213845_AddProductDataTableOnDB")]
     partial class AddProductDataTableOnDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,8 +51,8 @@ namespace GeekShopping.ProductAPI.Migrations
                         .HasColumnType("varchar(150)")
                         .HasColumnName("name");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int")
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)")
                         .HasColumnName("price");
 
                     b.HasKey("Id");
