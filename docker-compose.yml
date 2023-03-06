@@ -1,4 +1,4 @@
-version: "3.1"
+version: '3.4'
 
 services:
   db:
@@ -9,3 +9,17 @@ services:
       MYSQL_DATABASE: geek_shopping_product_api
     ports:
       - 3306:3306
+
+  geekshopping.web:
+    image: ${DOCKER_REGISTRY-}geekshoppingweb
+    build:
+      context: .
+      dockerfile: GeekShopping.Web/Dockerfile
+
+  geekshopping.productapi:
+    image: ${DOCKER_REGISTRY-}geekshoppingproductapi
+    build:
+      context: .
+      dockerfile: GeekShopping.ProductAPI/Dockerfile
+    links:
+      - "db:database"
