@@ -10,6 +10,11 @@ services:
     ports:
       - 3306:3306
 
+  adminer:
+    image: adminer:latest
+    ports:
+      - 8080:8080
+
   geekshopping.web:
     image: ${DOCKER_REGISTRY-}geekshoppingweb
     build:
