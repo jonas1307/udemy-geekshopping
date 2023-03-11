@@ -16,19 +16,3 @@ services:
       - db
     ports:
       - 8080:8080
-
-  geekshopping.web:
-    image: ${DOCKER_REGISTRY-}geekshoppingweb
-    build:
-      context: .
-      dockerfile: GeekShopping.Web/Dockerfile
-    depends_on:
-      - geekshopping.productapi
-
-  geekshopping.productapi:
-    image: ${DOCKER_REGISTRY-}geekshoppingproductapi
-    build:
-      context: .
-      dockerfile: GeekShopping.ProductAPI/Dockerfile
-    depends_on:
-      - db
