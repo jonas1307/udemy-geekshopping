@@ -1,4 +1,5 @@
 ﻿using GeekShopping.Web.Models;
+using GeekShopping.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,14 @@ namespace GeekShopping.Web.Controllers
             return View(products);
         }
 
-        public IActionResult Privacy()
+        [Authorize]
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var token = await HttpContext.GetTokenAsync("access_token");
+
+            var model = await _productService.GetProductById(id, token);
+
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
