@@ -11,11 +11,13 @@ namespace GeekShopping.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IProductService _productService;
+        private readonly ICartService _cartService;
 
-        public HomeController(ILogger<HomeController> logger, IProductService productService)
+        public HomeController(ILogger<HomeController> logger, IProductService productService, ICartService cartService)
         {
             _logger = logger;
             _productService = productService;
+            _cartService = cartService;
         }
 
         public async Task<IActionResult> Index()
@@ -31,6 +33,41 @@ namespace GeekShopping.Web.Controllers
             var token = await HttpContext.GetTokenAsync("access_token");
 
             var model = await _productService.GetProductById(id, token);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ActionName("Details")]
+        public async Task<IActionResult> DetailsPost(ProductViewModel model)
+        {
+            var token = await HttpContext.GetTokenAsync("access_token");
+
+            var cartHeader = new CartHeaderViewModel
+            {
+                UserId = User.FindFirst("sub")?.Value
+            };
+
+            var cartDetails = new CartDetailViewModel
+            {
+                Count = model.Count,
+                ProductId = model.Id,
+                Product = await _productService.GetProductById(model.Id, token)
+            };
+
+            var cart = new CartViewModel
+            {
+                CartHeader = cartHeader,
+                CartDetails = new List<CartDetailViewModel> { cartDetails }
+            };
+
+            var response = await _cartService.AddItemToCart(cart, token);
+
+            if (response != null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             return View(model);
         }
